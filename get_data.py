@@ -1,5 +1,6 @@
 import logging
 from instabot import Bot
+import requests
 
 
 def inst_data(login, password, instagram_post_list, timeout_value=10):

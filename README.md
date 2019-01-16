@@ -1,4 +1,6 @@
 # tourney_instagram
+
+https://breakingcode.ru/unpacking-in-python/
 '''
 language, salary = zip(*language_and_salary_list)
 salary = map(lambda x: plus(cube(x)), salary)

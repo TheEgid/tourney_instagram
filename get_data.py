@@ -1,7 +1,10 @@
 import logging
 from instabot import Bot
 import requests
-
+import os
+import sys
+from dotenv import load_dotenv
+import pprint
 
 def inst_data(login, password, instagram_post_list, timeout_value=10):
     """Get instagram comments.
@@ -37,14 +40,45 @@ def get_user_names(_string):
     #https://regex101.com/r/aGn8QC/2
     #for m in re.finditer(r'\d\d\.\d\d\.\d{4}', r'Эта строка написана 19.01.2018, а могла бы и 01.09.2017'):
     #print('Дата', m[0], 'начинается с позиции', m.start())
-
+    pass
     #print(re.findall(r'\d+', '12 + ٦٧', flags=re.ASCII))
-    return user_name
+    #return user_name
 
 def is_user_exist(user_name):
     pass
-    return boolean
-	
+    #return boolean
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
+    load_dotenv()
+    LOGIN_INST = os.getenv("LOGIN_INST")
+    PASSWORD_INST = str(os.getenv("PASSWORD_INST"))
+    bot = Bot()
+    bot.login(username=LOGIN_INST, password=PASSWORD_INST)
+
+    req_post = 'https://www.instagram.com/p/BrbkCltHo2K/'
+
+    inst_comments = bot.get_media_id_from_link(req_post)
+    z = bot.get_media_comments_all(inst_comments)
+    pprint.pprint(z)
+
+
+    for t in z:
+        pprint.pprint(t['text'])
+
+    # for pic in posted_pic_list:
+    #     caption = pic[:-4].split(' ')
+    #     caption = ' '.join(caption[1:])
+    #     timeout = random.randint(1, int(timeout_value * 0.5)) * timeout_value
+    #     logging.info('timeout= ' + str(timeout))
+    #     time.sleep(timeout)
+    #     bot.upload_photo(pic, caption=caption)
+    #     if bot.api.last_response.status_code is None:
+    #         logging.info('response error! check the cookies! ' + str(
+    #             bot.api.last_response))
+    #     else:
+    #         if bot.api.last_response.status_code != 200:
+    #             raise ValueError('response error!')
 	
 	
 	

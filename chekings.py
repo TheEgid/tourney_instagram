@@ -45,7 +45,7 @@ def check_followers(commentators):
     return followers_list
 	
 def check_likers(commentators):
-	"""Cheking Instagram Followers."""
+	"""Cheking Instagram Users, who liked."""
     likers_list = []
     for inst_id, str_comment in commentators.items():
         if is_user_liked(inst_id):

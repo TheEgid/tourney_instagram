@@ -15,7 +15,16 @@ def is_user_exist(user_name, bot):
     else:
         return inst_id
 
+    
+def get_author_from_media_link(link):
+    """Instead nonworking: bot.get_media_info(media_id)."""
+    response = requests.post(link=link)
+    if response.ok:
+        return find_inst_user(response.text)
+    else:
+        return None
 
+    
 def find_inst_user(_string):
     """Search and verify Instagram users."""
     _regex = r'(?:@)([A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?)'
@@ -43,7 +52,7 @@ def filter_comments(comments_list):
     return users_comments_filtered
 
 
-def check_friends(friends_list, bot):
+def get_all_taged_friends(friends_list, bot):
     _user_id, _username, _text = zip(*friends_list)
     _text = map(lambda x: is_user_exist(x, bot=bot), _text)
     cheked_list = list(zip(_user_id, _username, _text))
@@ -56,17 +65,8 @@ def check_friends(friends_list, bot):
 
 def get_all_likers(link, bot):
     """Get Instagram Users, who liked."""
-    media_id = bot.get_media_id_from_link(link)
+    media_id = bot.get_media_id_from_link(link=link)
     return bot.get_media_likers(media_id)
-
-
-def get_author_from_media_link(link):
-    """Instead nonworking: bot.get_media_info(media_id)."""
-    response = requests.post(link)
-    if response.ok:
-        return find_inst_user(response.text)
-    else:
-        return None
 
 
 def get_all_followers(link, bot):

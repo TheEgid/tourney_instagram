@@ -82,7 +82,7 @@ def find_intersection_3_lists (list1, list2, list3):
     return intersection_list
 
 
-def get_tourney_instagram_result(temp_result, organizer):
+def get_tourney_instagram_result(temp_result, organizer_id):
     """Tournament organizer exclusion."""
     pass
 

@@ -53,7 +53,6 @@ def get_all_followers(link, bot):
     return bot.get_user_followers(_user)
 
 
-
 def get_tourney_instagram_result_list(result_id_list, organizer_id):
     """Tournament organizer exclusion."""
     try:
@@ -86,5 +85,4 @@ if __name__ == '__main__':
 
     filtered_users_id = find_intersection_3_lists(users_id_noted_friend,users_id_followed,users_id_likers)
     print(filtered_users_id)
-
 

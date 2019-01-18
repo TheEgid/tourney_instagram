@@ -75,10 +75,17 @@ def get_all_followers(link, bot):
     print(_user)
     return bot.get_user_followers(_user)
 
+
 def find_intersection_3_lists (list1, list2, list3):
     _intersection_list = [x for x in list(set(list1)) if x in list(set(list2))]
     intersection_list = [x for x in list(set(list3)) if x in list(set(_intersection_list))]
     return intersection_list
+
+
+def get_tourney_instagram_result(temp_result, organizer):
+    """Tournament organizer exclusion."""
+    pass
+
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)

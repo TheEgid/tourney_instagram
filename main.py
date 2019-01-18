@@ -86,11 +86,17 @@ if __name__ == '__main__':
     post = 'https://www.instagram.com/p/BrbkCltHo2K/'
     # all_inst_comments_list = get_all_inst_comments(post_url=post, bot=bot)
     # filtered = filter_comments(all_inst_comments_list)
-    # checked_frends_list = check_friends(friends_list=filtered, bot=bot)
+    # checked_friends_list = check_friends(friends_list=filtered, bot=bot)
 
-    checked_frends_list = [(16029089, 'vyvyonthatbeat'), (230824758, 'msgchan'),
+    friends_list = [(16029089, 'vyvyonthatbeat'), (230824758, 'msgchan'),
               (3946295604, 'foodiema'), (929756969, 'jollechan'),
               (7052630766, 'proudalmaraz'), (15629820, 'xemiiboo'),
-              (145898557, 'createwithmi'), (7549645, 'aidairiarte'),]
+    (6066, 'createwithmi'), (55, 'aidairiarte')]
+
+    users_id_noted_friend, _username = zip(*friends_list)
+    users_id_followed = [7052630766, 55, 15629820, 6066, 7549645, 9099991]
+
+    filtered_users_id = [x for x in list(set(users_id_noted_friend)) if x in list(set(users_id_followed))]
+    print(filtered_users_id)
 
 

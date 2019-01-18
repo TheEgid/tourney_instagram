@@ -36,9 +36,11 @@ def get_all_inst_comments(post_url, bot):
 
 
 def filter_comments(comments_list):
-    comments_user_finded = [[x[0], x[1], find_inst_user(x[2])] for x in comments_list]
-    comments_user_filtered = [[x[0], x[1], x[2]] for x in comments_user_finded if x[2] is not None]
-    return comments_user_filtered
+    _user_id, _username, _text = zip(*comments_list)
+    _text = map(lambda x: find_inst_user(x), _text)
+    users_comments_finded = list(zip(_user_id, _username, _text))
+    users_comments_filtered = [[x[0], x[1], x[2]] for x in users_comments_finded if x[2] is not None]
+    return users_comments_filtered
 
 
 def check_friends(friends_list, bot):

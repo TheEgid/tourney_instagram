@@ -1,9 +1,8 @@
-import logging
-import requests
-from instabot import Bot
-import re
 import os
 import sys
+import pickle
+import pprint
+from instabot import Bot
 from dotenv import load_dotenv
 
 from services import is_user_exist
@@ -25,19 +24,32 @@ def filter_comments(comments_list):
     _user_id, _username, _text = zip(*comments_list)
     _text = map(lambda x: find_inst_user(x), _text)
     users_comments_finded = list(zip(_user_id, _username, _text))
-    users_comments_filtered = [[x[0], x[1], x[2]] for x in users_comments_finded if x[2] is not None]
+    users_comments_filtered = [[x[0], x[1], x[2]] for x
+                               in users_comments_finded if x[2] is not None]
     return users_comments_filtered
 
 
-def get_all_taged_friends(friends_list, bot):
+def check_all_taged_friends(friends_list, bot):
     _user_id, _username, _text = zip(*friends_list)
     _text = map(lambda x: is_user_exist(x, bot=bot), _text)
-    cheked_list = list(zip(_user_id, _username, _text))
+    checked_list = list(zip(_user_id, _username, _text))
     _frends_list = []
-    for _user_id, _username, _text in cheked_list:
+    for _user_id, _username, _text in checked_list:
         if _text is not None:
             _frends_list.append((_user_id, _username))
     return list(set(_frends_list))
+
+
+def get_taged_friends(link, bot):
+    """Get Instagram Users, who taged_friends."""
+    all_inst_comments_list = get_all_inst_comments(post_url=link,
+                                                   bot=bot)
+    filtered_list = filter_comments(all_inst_comments_list)
+    taged_friends_list = check_all_taged_friends(friends_list=filtered_list,
+                                                   bot=bot)
+    users_id_noted_friend, _username = zip(*taged_friends_list)
+    users_id_noted_friend = [str(x) for x in users_id_noted_friend]
+    return users_id_noted_friend
 
 
 def get_all_likers(link, bot):
@@ -46,43 +58,64 @@ def get_all_likers(link, bot):
     return bot.get_media_likers(media_id)
 
 
-def get_all_followers(link, bot):
-    """Get Instagram Followers."""
+def get_all_followers_picle_io(link, bot, io_file):
+    """Get Instagram Followers and input/output Picle file."""
     _user = get_author_from_media_link(link=link)
-    print(_user)
-    return bot.get_user_followers(_user)
+    if not os.path.exists(io_file):
+        all_followers = bot.get_user_followers(_user)
+        with open(io_file, 'wb') as f:
+            pickle.dump(all_followers, f)
+        return all_followers
+    else:
+        with open(io_file, 'rb') as f:
+            all_followers = pickle.load(f)
+        return all_followers
 
 
-def get_tourney_instagram_result_list(result_id_list, organizer_id):
+def get_tourney_instagram_result_list(link, bot, id_list):
     """Tournament organizer exclusion."""
+    organizer = get_author_from_media_link(link)
+    organizer_id = is_user_exist(organizer, bot)
     try:
-        result_id_list.remove(organizer_id)
-        return result_id_list
+        id_list.remove(organizer_id)
+        return id_list
     except ValueError:
-        return result_id_list
+        return id_list
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    sys.path.insert(0, os.path.split(dir_path)[0])
     load_dotenv()
     LOGIN_INST = os.getenv("LOGIN_INST")
     PASSWORD_INST = str(os.getenv("PASSWORD_INST"))
     bot = Bot()
     bot.login(username=LOGIN_INST, password=PASSWORD_INST)
-    post = 'https://www.instagram.com/p/BrbkCltHo2K/'
-    # all_inst_comments_list = get_all_inst_comments(post_url=post, bot=bot)
-    # filtered = filter_comments(all_inst_comments_list)
-    # checked_friends_list = check_friends(friends_list=filtered, bot=bot)
+    acceleration_file_name = 'data.pickle'
 
-    friends_list = [(9, 'vyvyonthatbeat'), (75049645, 'msgchan'),
-                  (3946295604, 'foodiema'), (929756969, 'jollechan'),
-                  (7052630766, 'proudalmaraz'), (60, 'xemiiboo'),
-    (6066, 'createwithmi'), (55, 'aidairiarte')]
+    post = sys.argv[1]
+    if len(sys.argv) == 2:
+        os.remove(acceleration_file_name)
+    else:
+        if sys.argv[2] == 'test':
+            print('Test_mode')
+        else:
+            os.remove(acceleration_file_name)
 
-    users_id_noted_friend, _username = zip(*friends_list)
-    users_id_followed = [6066, 9, 15629820, 60, 7549645, 9099991]
-    users_id_likers = [9, 999, 9920, 7549645, 60]
+    users_id_noted_friend_list = get_taged_friends(link=post,bot=bot)
 
-    filtered_users_id = find_intersection_3_lists(users_id_noted_friend,users_id_followed,users_id_likers)
-    print(filtered_users_id)
+    users_id_likers_list = get_all_likers(link=post, bot=bot)
+
+    users_id_followers_list = get_all_followers_picle_io(link=post,
+                                                         bot=bot,
+                                                         io_file=
+                                                         acceleration_file_name)
+
+    result = find_intersection_3_lists(users_id_noted_friend_list,
+                                       users_id_likers_list,
+                                       users_id_followers_list)
+
+    result_of_tourney = get_tourney_instagram_result_list(link=post, bot=bot,
+                                                          id_list=result)
+    pprint.pprint(result_of_tourney)
 

@@ -1,11 +1,5 @@
-import logging
 import requests
-from instabot import Bot
 import re
-import os
-import sys
-from dotenv import load_dotenv
-import pprint
 
 
 def is_user_exist(user_name, bot):
@@ -18,7 +12,7 @@ def is_user_exist(user_name, bot):
     
 def get_author_from_media_link(link):
     """Instead nonworking: bot.get_media_info(media_id)."""
-    response = requests.post(link=link)
+    response = requests.post(url=link)
     if response.ok:
         return find_inst_user(response.text)
     else:
@@ -35,7 +29,8 @@ def find_inst_user(_string):
         return find_inst_user_list[0]
 
 
-def find_intersection_3_lists (list1, list2, list3):
+def find_intersection_3_lists(list1, list2, list3):
+    """Returns intersection of 3 lists."""
     _intersection_list = [x for x in list(set(list1)) if x in list(set(list2))]
     intersection_list = [x for x in list(set(list3)) if x in list(set(_intersection_list))]
     return intersection_list

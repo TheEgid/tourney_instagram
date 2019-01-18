@@ -5,7 +5,11 @@ import re
 import os
 import sys
 from dotenv import load_dotenv
-import pprint
+
+from services import is_user_exist
+from services import get_author_from_media_link
+from services import find_inst_user
+from services import find_intersection_3_lists 
 
 
 def get_all_inst_comments(post_url, bot):
@@ -70,15 +74,16 @@ if __name__ == '__main__':
     # filtered = filter_comments(all_inst_comments_list)
     # checked_friends_list = check_friends(friends_list=filtered, bot=bot)
 
-    friends_list = [(16029089, 'vyvyonthatbeat'), (230824758, 'msgchan'),
-              (3946295604, 'foodiema'), (929756969, 'jollechan'),
-              (7052630766, 'proudalmaraz'), (15629820, 'xemiiboo'),
+    friends_list = [(9, 'vyvyonthatbeat'), (75049645, 'msgchan'),
+                  (3946295604, 'foodiema'), (929756969, 'jollechan'),
+                  (7052630766, 'proudalmaraz'), (60, 'xemiiboo'),
     (6066, 'createwithmi'), (55, 'aidairiarte')]
 
     users_id_noted_friend, _username = zip(*friends_list)
-    users_id_followed = [7052630766, 55, 15629820, 6066, 7549645, 9099991]
+    users_id_followed = [6066, 9, 15629820, 60, 7549645, 9099991]
+    users_id_likers = [9, 999, 9920, 7549645, 60]
 
-    filtered_users_id = [x for x in list(set(users_id_noted_friend)) if x in list(set(users_id_followed))]
+    filtered_users_id = find_intersection_3_lists(users_id_noted_friend,users_id_followed,users_id_likers)
     print(filtered_users_id)
 
 

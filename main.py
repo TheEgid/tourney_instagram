@@ -77,7 +77,7 @@ def get_all_followers(link, bot):
 
 def find_intersection_3_lists (list1, list2, list3):
     _intersection_list = [x for x in list(set(list1)) if x in list(set(list2))]
-    intersection_list = [x for x in list(set(list1)) if x in list(set(_intersection_list))]
+    intersection_list = [x for x in list(set(list3)) if x in list(set(_intersection_list))]
     return intersection_list
 
 if __name__ == '__main__':

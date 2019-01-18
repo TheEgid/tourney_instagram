@@ -82,9 +82,12 @@ def find_intersection_3_lists (list1, list2, list3):
     return intersection_list
 
 
-def get_tourney_instagram_result(temp_result, organizer_id):
+def get_tourney_instagram_result_list(result_id_list, organizer_id):
     """Tournament organizer exclusion."""
-    pass
+    try:
+        return result_id_list.remove(organizer_id)
+    except ValueError:
+        return result_id_list
 
 
 if __name__ == '__main__':

@@ -4,6 +4,7 @@ import pickle
 import pprint
 from instabot import Bot
 from dotenv import load_dotenv
+import argparse
 
 from services import is_user_exist
 from services import get_author_from_media_link
@@ -88,21 +89,23 @@ if __name__ == '__main__':
     sys.path.insert(0, os.path.split(dir_path)[0])
     load_dotenv()
     LOGIN_INST = os.getenv("LOGIN_INST")
-    PASSWORD_INST = str(os.getenv("PASSWORD_INST"))
+    PASSWORD_INST = os.getenv("PASSWORD_INST")
     bot = Bot()
     bot.login(username=LOGIN_INST, password=PASSWORD_INST)
     acceleration_file_name = 'data.pickle'
 
-    post = sys.argv[1]
-    if len(sys.argv) == 2:
-        os.remove(acceleration_file_name)
-    else:
-        if sys.argv[2] == 'test':
-            print('Test_mode')
-        else:
-            os.remove(acceleration_file_name)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("post", help="instagram post arg")
+    parser.add_argument("test", nargs='?', help="test mode arg", )
+    args = parser.parse_args()
+    post = args.post
 
-    users_id_noted_friend_list = get_taged_friends(link=post,bot=bot)
+    if args.test == 'test':
+        print('Test_mode')
+    else:
+        os.remove(acceleration_file_name)
+
+    users_id_noted_friend_list = get_taged_friends(link=post, bot=bot)
 
     users_id_likers_list = get_all_likers(link=post, bot=bot)
 
@@ -118,4 +121,3 @@ if __name__ == '__main__':
     result_of_tourney = get_tourney_instagram_result_list(link=post, bot=bot,
                                                           id_list=result)
     pprint.pprint(result_of_tourney)
-

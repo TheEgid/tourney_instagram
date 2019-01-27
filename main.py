@@ -25,8 +25,8 @@ def filter_comments(comments_list):
     _user_id, _username, _text = zip(*comments_list)
     _text = map(lambda x: find_inst_user(x), _text)
     users_comments_finded = list(zip(_user_id, _username, _text))
-    users_comments_filtered = [[x[0], x[1], x[2]] for x
-                               in users_comments_finded if x[2] is not None]
+    users_comments_filtered = [x for x in users_comments_finded
+                               if x[-1] is not None]
     return users_comments_filtered
 
 
@@ -77,11 +77,9 @@ def get_tourney_instagram_result_list(link, bot, id_list):
     """Tournament organizer exclusion."""
     organizer = get_author_from_media_link(link)
     organizer_id = is_user_exist(organizer, bot)
-    try:
+    if organizer_id in id_list:
         id_list.remove(organizer_id)
-        return id_list
-    except ValueError:
-        return id_list
+    return id_list
 
 
 if __name__ == '__main__':

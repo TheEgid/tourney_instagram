@@ -25,7 +25,7 @@ pip install -r requirements.txt
 Используем консольный ввод. Аргументом передаем полную ссылку на выбранный пост организатора конкурса. 
 
 ```
->>> $ python3 main.py https://www.instagram.com/p/BsisIqxBosz/
+python3 main.py https://www.instagram.com/p/BsisIqxBosz/
 ```
 
 Программа выводит в консоль лог своей работы. Пример лога
@@ -50,7 +50,7 @@ pip install -r requirements.txt
 а дополнительным вторым аргументом после пробела передаем значение _test_.
 
 ```
->>> $ python3 main.py https://www.instagram.com/p/BsisIqxBosz/ test
+python3 main.py https://www.instagram.com/p/BsisIqxBosz/ test
 ```
 
 

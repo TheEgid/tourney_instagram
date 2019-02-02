@@ -86,6 +86,13 @@ def find_winners(bot, post, storage_file):
     return get_winners_set(link=post, bot=bot, id_set=all_winners_set)
 
 
+def get_args_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("post", help="instagram post arg", type=str)
+    parser.add_argument("test", nargs='?', help="test mode arg", type=str)
+    return parser
+
+
 if __name__ == '__main__':
     dir_path = os.path.dirname(os.path.realpath(__file__))
     sys.path.insert(0, os.path.split(dir_path)[0])
@@ -96,10 +103,8 @@ if __name__ == '__main__':
     bot.login(username=LOGIN_INST, password=PASSWORD_INST)
     acceleration_file = 'data.pickle'
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("post", help="instagram post arg")
-    parser.add_argument("test", nargs='?', help="test mode arg", )
-    args = parser.parse_args()
+    arg_parser = get_args_parser()
+    args = arg_parser.parse_args()
 
     if args.test == 'test':
         print('Test_mode')

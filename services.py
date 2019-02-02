@@ -23,10 +23,3 @@ def find_inst_user(_string):
         return None
     else:
         return find_inst_user_list[0]
-
-
-def find_intersection_3_sets(set1, set2, set3):
-    """Returns intersection of 3 lists."""
-    _intersection_set = set1.intersection(set2)
-    intersection_set = _intersection_set.intersection(set3)
-    return list(intersection_set)

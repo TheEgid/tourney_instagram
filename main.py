@@ -105,7 +105,6 @@ if __name__ == '__main__':
 
     arg_parser = get_args_parser()
     args = arg_parser.parse_args()
-
     if args.test == 'test':
         print('Test_mode')
     else:

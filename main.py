@@ -36,12 +36,12 @@ def get_taged_friends(link, bot):
     """Get Instagram Users, who taged_friends."""
     all_inst_comments_list = get_all_inst_comments(post_url=link, bot=bot)
     _friends_commends_list = filter_comments(all_inst_comments_list)
-    friends_set = set()
+    friends_list = []
     for comment_user_id, comment_username, comment_text in _friends_commends_list :
         _comment_text = bot.get_user_id_from_username(comment_text)
         if _comment_text is not None:
-            friends_set.add(str(comment_user_id))
-    return friends_set
+            friends_list.append(str(comment_user_id))
+    return friends_list
 
 
 def get_all_likers(link, bot):
@@ -72,25 +72,31 @@ def get_winners_set(link, bot, id_set):
     return id_set
 
 
-def find_winners(bot, post, storage_file):
-    users_id_noted_friend_set = get_taged_friends(link=post, bot=bot)
+def find_winners(bot, post, storage_file, unique_key):
+    users_id_noted_friend_list = get_taged_friends(link=post, bot=bot)
     users_id_likers_set = get_all_likers(link=post, bot=bot)
     users_id_followers_set = get_all_followers_picle_io(link=post,
-                                                         bot=bot,
-                                                         io_file=
-                                                         storage_file)
-
-    all_winners_set = set.intersection(users_id_noted_friend_set,
-                                                 users_id_likers_set,
-                                                 users_id_followers_set)
-
-    return get_winners_set(link=post, bot=bot, id_set=all_winners_set)
+                                                        bot=bot,
+                                                        io_file=
+                                                        storage_file)
+    if unique_key is True:
+        all_winners_set = set.intersection(set(users_id_noted_friend_list),
+                                           users_id_likers_set,
+                                           users_id_followers_set)
+        return get_winners_set(link=post, bot=bot, id_set=all_winners_set)
+    else:
+        all_winners_set = set.intersection(users_id_likers_set,
+                                           users_id_followers_set)
+        winners = [i for i in users_id_noted_friend_list if
+                   i in all_winners_set]
+        return get_winners_set(link=post, bot=bot, id_set=winners)
 
 
 def get_args_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("post", help="instagram post arg", type=str)
     parser.add_argument("test", nargs='?', help="test mode arg", type=str)
+    parser.add_argument("uniq", nargs='?', help="uniq mode arg", type=str)
     return parser
 
 
@@ -112,9 +118,17 @@ if __name__ == '__main__':
     else:
         os.remove(acceleration_file)
 
-    winners_set = find_winners(bot=bot, post=args.post, storage_file=acceleration_file)
-    pprint.pprint(winners_set)
+    if args.uniq == 'uniq':
+        print('Unique_mode')
+        winners = find_winners(bot=bot, post=args.post,
+                               storage_file=acceleration_file, unique_key=True)
+    else:
+        print('Non-unique_mode')
+        winners = find_winners(bot=bot, post=args.post,
+                               storage_file=acceleration_file, unique_key=False)
 
-    champion = random.sample(winners_set, k=1)[0]
+    pprint.pprint(winners)
+
+    champion = random.sample(winners, k=1)[0]
     champion = bot.get_username_from_user_id(champion)
     pprint.pprint(f'Champion is {champion}')

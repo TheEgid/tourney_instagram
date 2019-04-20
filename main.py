@@ -1,6 +1,7 @@
 import os
 import sys
 import pickle
+import random
 import pprint
 from instabot import Bot
 from dotenv import load_dotenv
@@ -105,6 +106,7 @@ if __name__ == '__main__':
 
     arg_parser = get_args_parser()
     args = arg_parser.parse_args()
+
     if args.test == 'test':
         print('Test_mode')
     else:
@@ -112,3 +114,7 @@ if __name__ == '__main__':
 
     winners_set = find_winners(bot=bot, post=args.post, storage_file=acceleration_file)
     pprint.pprint(winners_set)
+
+    champion = random.sample(winners_set, k=1)[0]
+    champion = bot.get_username_from_user_id(champion)
+    pprint.pprint(f'Champion is {champion}')

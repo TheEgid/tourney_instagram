@@ -7,8 +7,7 @@ def get_author_from_media_link(link):
     response = requests.get(url=link)
     if response.ok:
         return find_inst_user(response.text)
-    else:
-        return None
+    return None
 
     
 def find_inst_user(_string):
@@ -19,7 +18,6 @@ def find_inst_user(_string):
 
     _regex = r'(?:@)([A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?)'
     find_inst_user_list = re.findall(_regex, _string)
-    if not find_inst_user_list:
-        return None
-    else:
+    if find_inst_user_list:
         return find_inst_user_list[0]
+    return None

@@ -13,3 +13,5 @@ images/
 
 !data.pickle
 !requirements.txt
+/config/
+/data.pickle

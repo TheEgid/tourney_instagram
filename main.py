@@ -79,7 +79,7 @@ def find_winners(bot, post, storage_file, unique_key):
                                                         bot=bot,
                                                         io_file=
                                                         storage_file)
-    if unique_key is True:
+    if unique_key:
         all_winners_set = set.intersection(set(users_id_noted_friend_list),
                                            users_id_likers_set,
                                            users_id_followers_set)
@@ -116,9 +116,12 @@ if __name__ == '__main__':
     if args.test == 'test':
         print('Test_mode')
     else:
-        os.remove(acceleration_file)
+        try:
+            os.remove(acceleration_file)
+        except FileNotFoundError:
+            pass
 
-    if args.uniq == 'uniq':
+    if args.uniq:
         print('Unique_mode')
         winners = find_winners(bot=bot, post=args.post,
                                storage_file=acceleration_file, unique_key=True)
